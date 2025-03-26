@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Customer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #0e161e;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #214c88;
+        }
+        label {
+            font-weight: bold;
+            color: #214c88;
+            margin-top: 10px;
+            display: block;
+        }
+        input, button {
+            width: 90%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .grocery-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .grocery-row input {
+            flex: 1;
+        }
+        .btn-add, .btn-submit {
+            background-color: #214c88;
+            color: white;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            border: none;
+            padding: 12px;
+        }
+        .btn-add:hover, .btn-submit:hover {
+            background-color: white;
+            color: #214c88;
+            border: 1px solid #214c88;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Add New Customer</h2>
+    <label for="name">Customer Name</label>
+    <input type="text" id="name" placeholder="Enter customer name">
+
+    <label for="phone">Phone Number</label>
+    <input type="text" id="phone" placeholder="Enter phone number">
+
+    <label>Grocery Items</label>
+    <div id="grocery-list">
+        <div class="grocery-row">
+            <input type="text" placeholder="Item Name">
+            <input type="number" placeholder="Cost" oninput="updateTotal()">
+        </div>
+    </div>
+
+    <button class="btn-add" onclick="addGroceryRow()">+ Add Item</button>
+
+    <label for="total">Total Cost</label>
+    <input type="number" id="total" placeholder="Total Cost" readonly>
+
+    <label for="paid">Amount Paid</label>
+    <input type="number" id="paid" placeholder="Amount Paid" oninput="updateDue()">
+
+    <label for="due">Amount Due</label>
+    <input type="number" id="due" placeholder="Amount Due" readonly>
+
+    <button class="btn-submit" onclick="saveCustomer()">Save Customer</button>
+</div>
+
+<script>
+    function addGroceryRow() {
+        let groceryList = document.getElementById('grocery-list');
+        let newRow = document.createElement('div');
+        newRow.classList.add('grocery-row');
+        newRow.innerHTML = `
+            <input type="text" placeholder="Item Name">
+            <input type="number" placeholder="Cost" oninput="updateTotal()">
+        `;
+        groceryList.appendChild(newRow);
+    }
+
+    function updateTotal() {
+        let total = 0;
+        document.querySelectorAll('#grocery-list input[type="number"]').forEach(input => {
+            total += parseFloat(input.value) || 0;
+        });
+        document.getElementById('total').value = total;
+        updateDue();  // Update the due amount as well
+    }
+
+    function updateDue() {
+        let total = parseFloat(document.getElementById('total').value) || 0;
+        let paid = parseFloat(document.getElementById('paid').value) || 0;
+        let due = total - paid;
+        document.getElementById('due').value = due < 0 ? 0 : due; // Ensures no negative due
+    }
+
+    function saveCustomer() {
+        let name = document.getElementById('name').value;
+        let phone = document.getElementById('phone').value;
+        let total = document.getElementById('total').value;
+        let paid = document.getElementById('paid').value;
+        let due = document.getElementById('due').value;
+
+        if (name && phone) {
+            alert(`Customer ${name} added successfully!\nPhone: ${phone}\nTotal: ₹${total}\nPaid: ₹${paid}\nDue: ₹${due}`);
+        } else {
+            alert("Please enter customer name and phone number.");
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Transactions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a2e;
+            color: #fff;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            background-color: #224c88;
+            border-radius: 10px;;
+            width: 500px;
+            margin-left: 500px;
+        }
+        .customer-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .customer-list li {
+            padding: 15px;
+            background: #0f3460;
+            margin: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            width: 50%;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .customer-list li:hover {
+            background: #16213e;
+        }
+        .transactions {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: #0f3460;
+            border-radius: 10px;
+            width: 80%;
+            margin: 0 auto;
+        }
+        h1, h2 {
+            color: #007bff;
+            padding-top: 20px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            padding: 10px;
+            background: #1b1b2f;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            margin-top: 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-bottom: 10px;;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Customer Transactions</h1>
+        <ul class="customer-list" id="customer-list"></ul>
+        <div class="transactions" id="transaction-details">
+            <h2>Transactions</h2>
+            <p id="transaction-count"></p>
+            <ul id="grocery-list"></ul>
+            <p id="total-amount"></p>
+            <p id="amount-paid"></p>
+        </div>
+    
+  <button onclick="window.location.href='neworexisting.html'">🔙 Back to Home</button>
+</div>
+
+
+    <script>
+        const customers = [
+            { id: "C001", name: "Rajesh", transactions: [
+                { groceries: [{ name: "Rice", cost: 50 }, { name: "Oil", cost: 100 }], date: "2024-03-18 10:00 AM", total: 150, paid: 100 },
+                { groceries: [{ name: "Wheat", cost: 80 }, { name: "Sugar", cost: 40 }], date: "2024-03-20 02:30 PM", total: 120, paid: 120 }
+            ] },
+            { id: "C002", name: "Ananya", transactions: [
+                { groceries: [{ name: "Milk", cost: 30 }, { name: "Eggs", cost: 60 }], date: "2024-03-19 09:15 AM", total: 90, paid: 50 }
+            ] },
+            { id: "C003", name: "Suresh", transactions: [
+                { groceries: [{ name: "Soap", cost: 40 }, { name: "Shampoo", cost: 120 }], date: "2024-03-21 05:45 PM", total: 160, paid: 160 }
+            ] }
+        ];
+
+        const customerList = document.getElementById("customer-list");
+        const transactionDetails = document.getElementById("transaction-details");
+        const transactionCount = document.getElementById("transaction-count");
+        const groceryList = document.getElementById("grocery-list");
+        const totalAmount = document.getElementById("total-amount");
+        const amountPaid = document.getElementById("amount-paid");
+
+        customers.forEach(customer => {
+            let listItem = document.createElement("li");
+            listItem.innerText = `${customer.name} (ID: ${customer.id})`;
+            listItem.onclick = () => showTransactions(customer);
+            customerList.appendChild(listItem);
+        });
+
+        function showTransactions(customer) {
+            transactionDetails.style.display = "block";
+            transactionCount.innerText = `Number of Transactions: ${customer.transactions.length}`;
+            groceryList.innerHTML = "";
+            let totalDue = 0;
+
+            customer.transactions.forEach(trans => {
+                let item = document.createElement("li");
+                let groceriesDetails = trans.groceries.map(g => `${g.name} - ₹${g.cost}`).join(", ");
+                item.innerText = `${trans.date}: ${groceriesDetails}`;
+                groceryList.appendChild(item);
+                totalDue += trans.total - trans.paid;
+            });
+
+            totalAmount.innerText = `Total Amount to be Paid: ₹${customer.transactions.reduce((sum, trans) => sum + trans.total, 0)}`;
+            amountPaid.innerText = `Total Amount Paid: ₹${customer.transactions.reduce((sum, trans) => sum + trans.paid, 0)}`;
+        }
+    </script>
+</body>
+</html>
